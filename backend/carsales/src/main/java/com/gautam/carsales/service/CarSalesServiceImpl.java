@@ -6,6 +6,7 @@ import com.gautam.carsales.repository.CarSalesRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -19,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class CarSalesServiceImpl implements CarSalesService {
     private final CarSalesRepository carSalesRepository;
 
@@ -50,7 +52,7 @@ public class CarSalesServiceImpl implements CarSalesService {
                 totalCount++;
                 try {
 
-                    String carNumber = record.get("car_number");
+                    String carNumber = record.get("Car Number");
                     boolean exists = carSalesRepository.existsByCarNumber(carNumber);
                     if (exists) {
                         failCount++;
@@ -59,7 +61,8 @@ public class CarSalesServiceImpl implements CarSalesService {
                     }
                     CarSales carSales = new CarSales();
 
-                    carSales.setCarNumber(carNumber);
+// String
+                    carSales.setCarNumber(record.get("Car Number"));
                     carSales.setBrand(record.get("Brand"));
                     carSales.setModel(record.get("Model"));
                     carSales.setColor(record.get("Color"));
@@ -67,31 +70,42 @@ public class CarSalesServiceImpl implements CarSalesService {
 // Integer
                     carSales.setYear(Integer.parseInt(record.get("Year")));
 
-// Date (format: yyyy-MM-dd)
-                    carSales.setDateOfPurchase(LocalDate.parse(record.get("Date Of Purchase"), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+// Date (dd-MM-yyyy)
+                    carSales.setDateOfPurchase(
+                            LocalDate.parse(
+                                    record.get("Date of Purchase"),
+                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                            )
+                    );
 
-// Time (format: HH:mm:ss)
-                    carSales.setTimeOfPurchase(LocalTime.parse(record.get("Time Of Purchase")));
+// Time (HH:mm:ss or HH:mm)
+                    carSales.setTimeOfPurchase(
+                            LocalTime.parse(record.get("Time of Purchase"))
+                    );
 
 // Long
-                    carSales.setPrice(Long.parseLong(record.get("Price")));
+                    carSales.setPrice(Long.parseLong(record.get("Price (Rs)")));
 
 // Double
-                    carSales.setMileage(Double.parseDouble(record.get("Mileage")));
+                    carSales.setMileage(Double.parseDouble(record.get("Mileage (km/l)")));
 
 // Integer
-                    carSales.setEngine(Integer.parseInt(record.get("Engine")));
+                    carSales.setEngine(Integer.parseInt(record.get("Engine (cc)")));
 
 // String
-                    carSales.setFuelType(record.get("FuelType"));
-                    carSales.setPaymentMode(record.get("PaymentMode"));
+                    carSales.setFuelType(record.get("Fuel Type"));
+                    carSales.setPaymentMode(record.get("Payment Mode"));
                     carSales.setState(record.get("State"));
                     carSales.setCity(record.get("City"));
-                    carSales.setCustomerName(record.get("CustomerName"));
-                    carSales.setContactNumber(record.get("ContactNumber"));
+                    carSales.setCustomerName(record.get("Customer Name"));
+                    carSales.setContactNumber(record.get("Contact Number"));
                     carSales.setEmail(record.get("Email"));
+
 // Integer
-                    carSales.setWarrantyPeriod(Integer.parseInt(record.get("WarrantyPeriod")));
+                    carSales.setWarrantyPeriod(
+                            Integer.parseInt(record.get("Warranty Period (years)"))
+                    );
+
                     carSalesList.add(carSales);
                 } catch (Exception e) {
                     failCount++;
