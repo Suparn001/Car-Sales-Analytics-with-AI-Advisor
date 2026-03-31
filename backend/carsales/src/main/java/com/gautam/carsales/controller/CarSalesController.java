@@ -2,16 +2,15 @@ package com.gautam.carsales.controller;
 
 import com.gautam.carsales.commons.response.ApiResponse;
 import com.gautam.carsales.dto.UploadSalesResponse;
+import com.gautam.carsales.dto.YearlyCountDto;
 import com.gautam.carsales.service.CarSalesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/car-sales")
@@ -57,5 +56,13 @@ public class CarSalesController {
         UploadSalesResponse uploadSalesResponse = carSalesService.uploadCsv(file);
         ApiResponse<UploadSalesResponse> apiResponse = getApiResponse(uploadSalesResponse);
         return ResponseEntity.ok(apiResponse);
+    }
+
+
+    @GetMapping("/yearly-count")
+    public ResponseEntity<ApiResponse<List<YearlyCountDto>>> yearlyCount() {
+        List<YearlyCountDto> carsCount = carSalesService.getYearlyCount();
+        ApiResponse<List<YearlyCountDto>> response = new ApiResponse<List<YearlyCountDto>>(true, "Data read successfuly", carsCount, HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
     }
 }

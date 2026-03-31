@@ -1,6 +1,7 @@
 package com.gautam.carsales.service;
 
 import com.gautam.carsales.dto.UploadSalesResponse;
+import com.gautam.carsales.dto.YearlyCountDto;
 import com.gautam.carsales.entity.CarSales;
 import com.gautam.carsales.repository.CarSalesRepository;
 import org.apache.commons.csv.CSVFormat;
@@ -120,5 +121,10 @@ public class CarSalesServiceImpl implements CarSalesService {
         }
 
         return new UploadSalesResponse(totalCount, totalCount - failCount, failCount);
+    }
+
+    @Override
+    public List<YearlyCountDto> getYearlyCount() {
+        return carSalesRepository.getYearlyCount();
     }
 }
